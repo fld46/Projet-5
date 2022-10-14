@@ -64,7 +64,7 @@ button.addEventListener("click", event => { ajouterCaddie() })
 function ajouterCaddie() {
     item.color = document.querySelector("#colors").value
     item.quantity = Number(document.querySelector("#quantity").value)
-    if (item.color == null || item.color == "" || item.quantity == null || item.quantity === 0) {
+    if (item.color == null || item.color == "" || item.quantity == null || item.quantity <= 0 || item.quantity > 100) {
         alert("Merci de selectionner une couleur et une quantité")
     } else {
         localStorage.setItem(productId + item.color, JSON.stringify(item))
