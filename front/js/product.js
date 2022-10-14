@@ -59,16 +59,31 @@ function listCouleur(colors) {
 }
 
 const button = document.querySelector("#addToCart")
-button.addEventListener("click", event => { ajouterCaddie() })
+button.addEventListener("click", event => { verifCaddie() })
 
-function ajouterCaddie() {
+
+
+function verifCaddie() {
     item.color = document.querySelector("#colors").value
     item.quantity = Number(document.querySelector("#quantity").value)
     if (item.color == null || item.color == "" || item.quantity == null || item.quantity <= 0 || item.quantity > 100) {
         alert("Merci de selectionner une couleur et une quantité")
     } else {
+        addCaddie()
+    }
+}
+
+function addCaddie() {
+    if (localStorage.getItem(productId + item.color) === null) {
         localStorage.setItem(productId + item.color, JSON.stringify(item))
         alert(item.name + " de couleur " + item.color + " * " + item.quantity + " ajouté(s) au panier.")
+        document.location.href = 'index.html'
+    } else {
+        const kanapModel = localStorage.getItem(localStorage.key(productId + item.color))
+        itemObj = JSON.parse(kanapModel)
+        itemObj.quantity += item.quantity
+        localStorage.setItem(productId + item.color, JSON.stringify(itemObj))
+        alert(item.name + " de couleur " + item.color + "exist deja.")
         document.location.href = 'index.html'
     }
 
