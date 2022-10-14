@@ -68,8 +68,8 @@ function createContent(obj) {
     divSettings.appendChild(divDelete)
     divDelete.appendChild(boutonDelete)
     return div
-
 }
+
 function articleNumber() {
     let number = 0
     for (let i = 0; i < localStorage.length; i++) {
