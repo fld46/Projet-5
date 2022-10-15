@@ -1,15 +1,14 @@
 const id = new URLSearchParams(window.location.search)
 const productId = id.get('id')
-
 const item = {
     id: productId
 }
+const button = document.querySelector("#addToCart")
+button.addEventListener("click", event => { verifCaddie() })
 
 fetch('http://localhost:3000/api/products/' + productId)
     .then((res) => res.json())
     .then((data) => infoProduct(data),)
-
-
 
 function infoProduct(donnees) {
     const { altTxt, colors, description, imageUrl, name, price } = donnees
@@ -24,8 +23,6 @@ function infoProduct(donnees) {
     listCouleur(colors)
     document.querySelector(".item__img").appendChild(image)
 }
-
-
 
 function createImage(url, alt) {
     const image = document.createElement('img')
@@ -57,10 +54,6 @@ function listCouleur(colors) {
         document.querySelector("#colors").appendChild(option)
     }
 }
-
-const button = document.querySelector("#addToCart")
-button.addEventListener("click", event => { verifCaddie() })
-
 
 
 function verifCaddie() {

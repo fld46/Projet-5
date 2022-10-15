@@ -88,6 +88,5 @@ function totalPrice() {
         number += itemObj.quantity * itemObj.price
     }
     document.getElementById('totalPrice').textContent = number.toFixed(2)
-
 }
 
