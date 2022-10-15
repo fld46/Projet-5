@@ -81,9 +81,13 @@ function addCaddie() {
     } else {
         const kanapModel = localStorage.getItem(localStorage.key(productId + item.color))
         itemObj = JSON.parse(kanapModel)
-        itemObj.quantity += item.quantity
-        localStorage.setItem(productId + item.color, JSON.stringify(itemObj))
-        alert(item.name + " de couleur " + item.color + "exist deja.")
+        if ((itemObj.quantity + item.quantity) <= 100) {
+            itemObj.quantity += item.quantity
+            localStorage.setItem(productId + item.color, JSON.stringify(itemObj))
+            alert(item.name + " de couleur " + item.color + "exist deja.")
+        } else {
+            alert("trop de canapés")
+        }
         document.location.href = 'index.html'
     }
 
