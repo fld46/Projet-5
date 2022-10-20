@@ -20,11 +20,6 @@ function makeHtml(obj) {
     article.appendChild(divImg)
     article.appendChild(description)
     document.getElementById("cart__items").appendChild(article)
-    const chgQte = document.querySelector(".itemQuantity")
-    chgQte.addEventListener("input", () => updateQte(obj.idc))
-    const delItem = document.querySelector(".deleteItem")
-    delItem.addEventListener("click", () => deleteItem(delItem.dataset.idc))
-
 }
 
 //Creation de l'image html
@@ -83,6 +78,7 @@ function articleQte(obj) {
     inputQte.min = "0"
     inputQte.max = "100"
     inputQte.value = obj.quantity
+    inputQte.addEventListener("input", () => updateQte(obj, inputQte.value))
     divSettings.appendChild(divQuantity)
     divQuantity.appendChild(quantity)
     divQuantity.appendChild(inputQte)
@@ -104,6 +100,7 @@ function articleNumber() {
 function deleteArticle(idc) {
     const divDelete = document.createElement('div')
     divDelete.className = "cart__item__content__settings__delete"
+    divDelete.addEventListener("click", () => deleteItem(idc))
     const boutonDelete = document.createElement('p')
     boutonDelete.className = "deleteItem"
     boutonDelete.textContent = 'supprimer'
@@ -112,14 +109,19 @@ function deleteArticle(idc) {
     return divDelete
 }
 //function update de quatité
-function updateQte(obj) {
-    console.log(obj)
+function updateQte(obj, qte) {
+    if (qte > 0 && qte < 100) {
+        obj.quantity = qte
+        localStorage.setItem(obj.idc, JSON.stringify(obj))
+        articleNumber()
+        totalPrice()
+    }
+
 }
 //function de suppression de l'item
 function deleteItem(id) {
-    console.log(id + 'deleted')
-    //localStorage.removeItem(id)
-    //document.location.href = 'cart.html'
+    localStorage.removeItem(id)
+    document.location.href = 'cart.html'
 }
 
 //calcul du prix total
