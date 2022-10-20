@@ -1,3 +1,4 @@
+//Recuperation des items sous la forme d'objet itemObj
 for (let i = 0; i < localStorage.length; i++) {
     const item = localStorage.getItem(localStorage.key(i))
     itemObj = JSON.parse(item)
@@ -5,7 +6,7 @@ for (let i = 0; i < localStorage.length; i++) {
     articleNumber()
     totalPrice()
 }
-
+//mise en forme Html
 function makeHtml(obj) {
     const article = document.createElement("article")
     article.className = "cart__item"
@@ -16,8 +17,13 @@ function makeHtml(obj) {
     article.appendChild(divImg)
     article.appendChild(description)
     document.getElementById("cart__items").appendChild(article)
-
+    const chgQte = document.querySelector(".itemQuantity")
+    chgQte.addEventListener("input", () => updateQte(obj))
+    const delItem = document.querySelector(".deleteItem")
+    delItem.addEventListener("click", () => deleteItem(obj))
 }
+
+//Creation de l'image html
 function createImg(obj) {
     const div = document.createElement("div")
     div.className = "cart__item__img"
@@ -28,7 +34,17 @@ function createImg(obj) {
     return div
 }
 
+//creation du contenu de l'objet
 function createContent(obj) {
+    const div = articleTitle(obj)
+    const divSettings = articleQte(obj)
+    div.appendChild(divSettings)
+    const divDelete = deleteArticle()
+    divSettings.appendChild(divDelete)
+    return div
+}
+//creation de la premiere partie de l'article
+function articleTitle(obj) {
     const div = document.createElement('div')
     div.className = "cart__item__content"
     const divDescription = document.createElement('div')
@@ -43,6 +59,11 @@ function createContent(obj) {
     divDescription.appendChild(color)
     divDescription.appendChild(price)
     div.appendChild(divDescription)
+    return div
+}
+
+//creation de l'input quantité
+function articleQte(obj) {
     const divSettings = document.createElement('div')
     divSettings.className = "cart__item__content__settings"
     const divQuantity = document.createElement('div')
@@ -56,20 +77,13 @@ function createContent(obj) {
     inputQte.min = "0"
     inputQte.max = "100"
     inputQte.value = obj.quantity
-    div.appendChild(divSettings)
     divSettings.appendChild(divQuantity)
     divQuantity.appendChild(quantity)
     divQuantity.appendChild(inputQte)
-    const divDelete = document.createElement('div')
-    divDelete.className = "cart__item__content__settings__delete"
-    const boutonDelete = document.createElement('p')
-    boutonDelete.className = "deleteItem"
-    boutonDelete.textContent = 'supprimer'
-    divSettings.appendChild(divDelete)
-    divDelete.appendChild(boutonDelete)
-    return div
+    return divSettings
 }
 
+//Recuperation du nombre total d'article ds le panier
 function articleNumber() {
     let number = 0
     for (let i = 0; i < localStorage.length; i++) {
@@ -80,6 +94,26 @@ function articleNumber() {
     document.getElementById('totalQuantity').textContent = number
 }
 
+//Creation du bouton delete
+function deleteArticle() {
+    const divDelete = document.createElement('div')
+    divDelete.className = "cart__item__content__settings__delete"
+    const boutonDelete = document.createElement('p')
+    boutonDelete.className = "deleteItem"
+    boutonDelete.textContent = 'supprimer'
+    divDelete.appendChild(boutonDelete)
+    return divDelete
+}
+//function update de quatité
+function updateQte(obj) {
+    console.log(obj)
+}
+//function de suppression de l'item
+function deleteItem(obj) {
+    console.log(obj)
+}
+
+//calcul du prix total
 function totalPrice() {
     let number = 0
     for (let i = 0; i < localStorage.length; i++) {
