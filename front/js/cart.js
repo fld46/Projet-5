@@ -144,3 +144,24 @@ function totalPrice() {
     document.getElementById('totalPrice').textContent = number.toFixed(2)
 }
 
+//FORMULAIRE
+verif('firstName', /^([a-zA-Z])*$/)
+verif('lastName', /^([a-zA-Z])*$/)
+verif('address', /^([a-zA-Z 0-9])*$/)
+verif('city', /^([a-zA-Z ])*$/)
+verif('email',)
+function verif(name, regex, msg = "erreur") {
+    const nom = document.getElementById(name)
+    nom.addEventListener("input", function (event) {
+        const expreg = new RegExp(regex)
+        if (expreg.test(nom.value)) {
+            const error = document.querySelector('#' + name + 'ErrorMsg')
+        } else {
+            const error = document.querySelector('#' + name + 'ErrorMsg')
+            error.textContent = msg
+        }
+    })
+}
+
+
+
