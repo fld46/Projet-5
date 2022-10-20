@@ -1,11 +1,14 @@
 //Recuperation des items sous la forme d'objet itemObj
+
 for (let i = 0; i < localStorage.length; i++) {
     const item = localStorage.getItem(localStorage.key(i))
     itemObj = JSON.parse(item)
+    itemObj.idc = localStorage.key(i)
     makeHtml(itemObj)
     articleNumber()
     totalPrice()
 }
+
 //mise en forme Html
 function makeHtml(obj) {
     const article = document.createElement("article")
@@ -18,9 +21,10 @@ function makeHtml(obj) {
     article.appendChild(description)
     document.getElementById("cart__items").appendChild(article)
     const chgQte = document.querySelector(".itemQuantity")
-    chgQte.addEventListener("input", () => updateQte(obj))
+    chgQte.addEventListener("input", () => updateQte(obj.idc))
     const delItem = document.querySelector(".deleteItem")
-    delItem.addEventListener("click", () => deleteItem(obj))
+    delItem.addEventListener("click", () => deleteItem(delItem.dataset.idc))
+
 }
 
 //Creation de l'image html
@@ -39,8 +43,9 @@ function createContent(obj) {
     const div = articleTitle(obj)
     const divSettings = articleQte(obj)
     div.appendChild(divSettings)
-    const divDelete = deleteArticle()
+    const divDelete = deleteArticle(obj.idc)
     divSettings.appendChild(divDelete)
+
     return div
 }
 //creation de la premiere partie de l'article
@@ -59,6 +64,7 @@ function articleTitle(obj) {
     divDescription.appendChild(color)
     divDescription.appendChild(price)
     div.appendChild(divDescription)
+
     return div
 }
 
@@ -95,12 +101,13 @@ function articleNumber() {
 }
 
 //Creation du bouton delete
-function deleteArticle() {
+function deleteArticle(idc) {
     const divDelete = document.createElement('div')
     divDelete.className = "cart__item__content__settings__delete"
     const boutonDelete = document.createElement('p')
     boutonDelete.className = "deleteItem"
     boutonDelete.textContent = 'supprimer'
+    boutonDelete.dataset.idc = idc
     divDelete.appendChild(boutonDelete)
     return divDelete
 }
@@ -109,8 +116,10 @@ function updateQte(obj) {
     console.log(obj)
 }
 //function de suppression de l'item
-function deleteItem(obj) {
-    console.log(obj)
+function deleteItem(id) {
+    console.log(id + 'deleted')
+    //localStorage.removeItem(id)
+    //document.location.href = 'cart.html'
 }
 
 //calcul du prix total
