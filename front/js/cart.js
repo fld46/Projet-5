@@ -149,7 +149,7 @@ verif('firstName', /^([a-zA-Z])*$/)
 verif('lastName', /^([a-zA-Z])*$/)
 verif('address', /^([a-zA-Z 0-9])*$/)
 verif('city', /^([a-zA-Z ])*$/)
-verif('email',)
+verif('email', /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
 function verif(name, regex, msg = "erreur") {
     const nom = document.getElementById(name)
     nom.addEventListener("input", function (event) {
