@@ -4,9 +4,21 @@ for (let i = 0; i < localStorage.length; i++) {
     const item = localStorage.getItem(localStorage.key(i))
     itemObj = JSON.parse(item)
     itemObj.idc = localStorage.key(i)
-    makeHtml(itemObj)
+    fetch('http://localhost:3000/api/products/' + itemObj.id)
+        .then((res) => res.json())
+        .then((data) => product(data, itemObj),)
+
+}
+function product(data, obj) {
+    const { altTxt, imageUrl, name, price } = data
+    obj.price = Number(price)
+    obj.imageUrl = imageUrl
+    obj.altTxt = altTxt
+    obj.name = name
+    obj.idc = itemObj.idc
+    makeHtml(obj)
     articleNumber()
-    totalPrice()
+    totalPrice(obj)
 }
 
 //mise en forme Html
@@ -79,7 +91,7 @@ function articleQte(obj) {
     inputQte.min = "0"
     inputQte.max = "100"
     inputQte.value = obj.quantity
-    inputQte.addEventListener("input", () => updateQte(obj, inputQte.value))
+    inputQte.addEventListener("change", () => updateQte(obj, inputQte.value))
     divSettings.appendChild(divQuantity)
     divQuantity.appendChild(quantity)
     divQuantity.appendChild(inputQte)
@@ -101,7 +113,7 @@ function articleNumber() {
 function deleteArticle(obj, idc) {
     const divDelete = document.createElement('div')
     divDelete.className = "cart__item__content__settings__delete"
-    divDelete.addEventListener("click", () => deleteItem(idc))
+    divDelete.addEventListener("click", () => deleteItem(idc, obj))
     const boutonDelete = document.createElement('p')
     boutonDelete.className = "deleteItem"
     boutonDelete.textContent = 'supprimer'
@@ -112,40 +124,46 @@ function deleteArticle(obj, idc) {
 //function update de quatité
 function updateQte(obj, qte) {
     if (qte == 0) {
-        deleteItem(obj.idc)
+        deleteItem(obj.idc, obj)
     }
     else if (qte >= 0 && qte < 100) {
-        obj.quantity = qte
-        localStorage.setItem(obj.idc, JSON.stringify(obj))
+        obj.quantity = Number(qte)
+        objPanier = {
+            id: obj.id,
+            color: obj.color,
+            quantity: obj.quantity
+        }
+        localStorage.setItem(obj.idc, JSON.stringify(objPanier))
         articleNumber()
-        totalPrice()
+        totalPrice(obj)
     } else {
         alert('La quantité par article doit être comprise entre 1 et 100')
     }
 
 }
 //function de suppression de l'item
-function deleteItem(id) {
+function deleteItem(id, obj) {
     const element = document.getElementById(id)
     element.remove()
     localStorage.removeItem(id)
     articleNumber()
-    totalPrice()
+    totalPrice(obj)
 }
 
 //calcul du prix total
-function totalPrice() {
+function totalPrice(obj) {
     let number = 0
     for (let i = 0; i < localStorage.length; i++) {
         const item = localStorage.getItem(localStorage.key(i))
         itemObj = JSON.parse(item)
-        number += itemObj.quantity * itemObj.price
+        number += itemObj.quantity * obj.price
     }
     document.getElementById('totalPrice').textContent = number.toFixed(2)
 }
 
 //FORMULAIRE
-verif('firstName', /^([a-zA-Z])*$/)
+
+verif('firstName', /^([a-zA-Z])*$/, 'Nom non conforme')
 verif('lastName', /^([a-zA-Z])*$/)
 verif('address', /^([a-zA-Z 0-9])*$/)
 verif('city', /^([a-zA-Z ])*$/)
@@ -163,6 +181,3 @@ function verif(name, regex, msg = "erreur") {
         }
     })
 }
-
-
-

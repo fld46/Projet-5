@@ -67,8 +67,13 @@ function verifCaddie() {
 }
 
 function addCaddie() {
+    itemAdd = {
+        id: item.id,
+        quantity: item.quantity,
+        color: item.color
+    }
     if (localStorage.getItem(productId + item.color) === null) {
-        localStorage.setItem(productId + item.color, JSON.stringify(item))
+        localStorage.setItem(productId + item.color, JSON.stringify(itemAdd))
         alert(item.name + " de couleur " + item.color + " * " + item.quantity + " ajouté(s) au panier.")
         document.location.href = 'index.html'
     } else {
