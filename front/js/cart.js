@@ -1,14 +1,16 @@
 //Recuperation des items sous la forme d'objet itemObj
-
+const ids = []
 for (let i = 0; i < localStorage.length; i++) {
     const item = localStorage.getItem(localStorage.key(i))
     itemObj = JSON.parse(item)
+    ids.push(itemObj.id)
     itemObj.idc = localStorage.key(i)
     fetch('http://localhost:3000/api/products/' + itemObj.id)
         .then((res) => res.json())
         .then((data) => product(data, itemObj),)
 
 }
+//creation de l'objet obj avec toutes les infos de celui-ci et appel des fonctions pour le html
 function product(data, obj) {
     const { altTxt, imageUrl, name, price } = data
     obj.price = Number(price)
@@ -162,6 +164,8 @@ function totalPrice(obj) {
 }
 
 //FORMULAIRE
+const orderButton = document.querySelector("#order")
+orderButton.addEventListener("click", (e) => submitForm(e))
 
 verif('firstName', /^([a-zA-Z])*$/, 'Nom non conforme')
 verif('lastName', /^([a-zA-Z])*$/)
@@ -169,6 +173,7 @@ verif('address', /^([a-zA-Z 0-9])*$/)
 verif('city', /^([a-zA-Z ])*$/)
 verif('email', /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
 
+//comaraison d'une valeur d'un champ no avec un regex
 function verif(name, regex, msg = "erreur") {
     const nom = document.getElementById(name)
     const error = document.querySelector('#' + name + 'ErrorMsg')
@@ -176,8 +181,39 @@ function verif(name, regex, msg = "erreur") {
         const expreg = new RegExp(regex)
         if (expreg.test(nom.value)) {
             error.textContent = ""
+
         } else {
             error.textContent = msg
+
         }
     })
+}
+
+
+//fonction d'envoi du formulaire
+function submitForm(e) {
+    e.preventDefault()
+    if (localStorage.length === 0) {
+        alert("Le panier doit contenir un article minimum")
+        return
+    }
+    const form = document.querySelector(".cart__order__form")
+    const body = makeRequestPost(form.elements)
+    console.log(body)
+}
+
+//fonction pour creer l'objet body du POST
+function makeRequestPost(elements) {
+
+    const body = {
+        contact: {
+            firstName: elements.firstName.value,
+            lastName: elements.lastName.value,
+            address: elements.address.value,
+            city: elements.city.value,
+            email: elements.email.value
+        },
+        products: ids
+    }
+    return body
 }
