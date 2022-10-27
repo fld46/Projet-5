@@ -1,6 +1,8 @@
 const idOrder = new URLSearchParams(window.location.search)
-const OrderId = idOrder.get('id')
+const orderId = idOrder.get('id')
+showOrder(orderId)
 
-function showOrder() {
-
+function showOrder(orderId) {
+    const span = document.querySelector("#orderId")
+    span.textContent = orderId
 }

@@ -207,7 +207,7 @@ function submitForm(e) {
         }
     })
         .then((res) => res.json())
-        .then((data) => console.log(data))
+        .then((data) => confirmation(data.orderId))
 
 }
 
@@ -239,4 +239,9 @@ function getIdsfromLocal() {
         }
     }
     return ids
+}
+
+//function envoie sur la page confirmation
+function confirmation(id) {
+    window.location.href = 'confirmation.html?id=' + id
 }
