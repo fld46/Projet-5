@@ -1,9 +1,8 @@
 //Recuperation des items sous la forme d'objet itemObj
-const ids = []
+
 for (let i = 0; i < localStorage.length; i++) {
     const item = localStorage.getItem(localStorage.key(i))
     itemObj = JSON.parse(item)
-    ids.push(itemObj.id)
     itemObj.idc = localStorage.key(i)
     fetch('http://localhost:3000/api/products/' + itemObj.id)
         .then((res) => res.json())
@@ -146,6 +145,7 @@ function updateQte(obj, qte) {
 //function de suppression de l'item
 function deleteItem(id, obj) {
     const element = document.getElementById(id)
+    console.log(element)
     element.remove()
     localStorage.removeItem(id)
     articleNumber()
@@ -199,7 +199,16 @@ function submitForm(e) {
     }
     const form = document.querySelector(".cart__order__form")
     const body = makeRequestPost(form.elements)
-    console.log(body)
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+
 }
 
 //fonction pour creer l'objet body du POST
@@ -213,7 +222,21 @@ function makeRequestPost(elements) {
             city: elements.city.value,
             email: elements.email.value
         },
-        products: ids
+        products: getIdsfromLocal()
     }
     return body
+}
+
+//function getIdsfromlocal 
+
+function getIdsfromLocal() {
+    const ids = []
+    for (let i = 0; i < localStorage.length; i++) {
+        const item = localStorage.getItem(localStorage.key(i))
+        itemObj = JSON.parse(item)
+        if (ids.indexOf(itemObj.id) === -1) {
+            ids.push(itemObj.id)
+        }
+    }
+    return ids
 }
