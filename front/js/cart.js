@@ -113,7 +113,7 @@ function articleNumber() {
 
 //Creation du bouton delete
 function deleteArticle(obj) {
-    console.log(obj)
+
     const divDelete = document.createElement('div')
     divDelete.className = "cart__item__content__settings__delete"
     divDelete.addEventListener("click", () => deleteItem(obj.idc, obj))
