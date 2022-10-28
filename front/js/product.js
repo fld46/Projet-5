@@ -75,7 +75,7 @@ function addCaddie() {
     if (localStorage.getItem(productId + item.color) === null) {
         localStorage.setItem(productId + item.color, JSON.stringify(itemAdd))
         alert(item.name + " de couleur " + item.color + " * " + item.quantity + " ajouté(s) au panier.")
-        document.location.href = 'index.html'
+        redirection()
     } else {
         const kanapModel = localStorage.getItem(localStorage.key(productId + item.color))
         itemObj = JSON.parse(kanapModel)
@@ -86,9 +86,16 @@ function addCaddie() {
         } else {
             alert("trop de canapés")
         }
-        document.location.href = 'index.html'
+        redirection()
     }
 
+}
+function redirection() {
+    if (confirm('Votre produit a ete ajouté au panier, voulez vous continuer vers celui-ci ?')) {
+        document.location.href = 'cart.html'
+    } else {
+        document.location.href = 'index.html'
+    }
 }
 
 

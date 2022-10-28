@@ -1,14 +1,15 @@
 //Recuperation des items sous la forme d'objet itemObj
 
 for (let i = 0; i < localStorage.length; i++) {
-    const item = localStorage.getItem(localStorage.key(i))
-    itemObj = JSON.parse(item)
+    let item = localStorage.getItem(localStorage.key(i))
+    let itemObj = JSON.parse(item)
     itemObj.idc = localStorage.key(i)
     fetch('http://localhost:3000/api/products/' + itemObj.id)
         .then((res) => res.json())
-        .then((data) => product(data, itemObj),)
+        .then((data) => product(data, itemObj))
 
 }
+
 //creation de l'objet obj avec toutes les infos de celui-ci et appel des fonctions pour le html
 function product(data, obj) {
     const { altTxt, imageUrl, name, price } = data
@@ -16,7 +17,6 @@ function product(data, obj) {
     obj.imageUrl = imageUrl
     obj.altTxt = altTxt
     obj.name = name
-    obj.idc = itemObj.idc
     makeHtml(obj)
     articleNumber()
     totalPrice(obj)
@@ -26,7 +26,7 @@ function product(data, obj) {
 function makeHtml(obj) {
     const article = document.createElement("article")
     article.className = "cart__item"
-    article.id = obj.id + obj.color
+    article.id = obj.idc
     article.dataset.id = obj.id
     article.dataset.color = obj.color
     const divImg = createImg(obj)
@@ -52,7 +52,7 @@ function createContent(obj) {
     const div = articleTitle(obj)
     const divSettings = articleQte(obj)
     div.appendChild(divSettings)
-    const divDelete = deleteArticle(obj, obj.idc)
+    const divDelete = deleteArticle(obj)
     divSettings.appendChild(divDelete)
 
     return div
@@ -79,6 +79,7 @@ function articleTitle(obj) {
 
 //creation de l'input quantité
 function articleQte(obj) {
+    //console.log(obj)
     const divSettings = document.createElement('div')
     divSettings.className = "cart__item__content__settings"
     const divQuantity = document.createElement('div')
@@ -111,14 +112,15 @@ function articleNumber() {
 }
 
 //Creation du bouton delete
-function deleteArticle(obj, idc) {
+function deleteArticle(obj) {
+    console.log(obj)
     const divDelete = document.createElement('div')
     divDelete.className = "cart__item__content__settings__delete"
-    divDelete.addEventListener("click", () => deleteItem(idc, obj))
+    divDelete.addEventListener("click", () => deleteItem(obj.idc, obj))
     const boutonDelete = document.createElement('p')
     boutonDelete.className = "deleteItem"
     boutonDelete.textContent = 'supprimer'
-    boutonDelete.dataset.idc = idc
+    boutonDelete.dataset.idc = obj.idc
     divDelete.appendChild(boutonDelete)
     return divDelete
 }
@@ -145,7 +147,6 @@ function updateQte(obj, qte) {
 //function de suppression de l'item
 function deleteItem(id, obj) {
     const element = document.getElementById(id)
-    console.log(element)
     element.remove()
     localStorage.removeItem(id)
     articleNumber()
