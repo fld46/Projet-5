@@ -134,7 +134,7 @@ function updateQte(obj, qte) {
             color: obj.color,
             quantity: obj.quantity
         }
-        localStorage.setItem(obj.idc, JSON.stringify(objPanier))
+        localStorage.setItem(objPanier.id + objPanier.color, JSON.stringify(objPanier))
         articleNumber()
         totalPrice(obj)
     } else {
@@ -167,11 +167,11 @@ function totalPrice(obj) {
 const orderButton = document.querySelector("#order")
 orderButton.addEventListener("click", (e) => submitForm(e))
 
-verif('firstName', /^([a-zA-Z])*$/, 'Nom non conforme')
-verif('lastName', /^([a-zA-Z])*$/)
-verif('address', /^([a-zA-Z 0-9])*$/)
-verif('city', /^([a-zA-Z ])*$/)
-verif('email', /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+verif('firstName', /^([a-zA-Z])*$/, 'Prenom non conforme')
+verif('lastName', /^([a-zA-Z])*$/, 'Nom non conforme')
+verif('address', /^([a-zA-Z 0-9])*$/, 'Adresse non conforme')
+verif('city', /^([a-zA-Z ])*$/, 'Ville non conforme')
+verif('email', /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Adresse e-mail non conforme')
 
 //comaraison d'une valeur d'un champ no avec un regex
 function verif(name, regex, msg = "erreur") {
@@ -213,7 +213,6 @@ function submitForm(e) {
 
 //fonction pour creer l'objet body du POST
 function makeRequestPost(elements) {
-
     const body = {
         contact: {
             firstName: elements.firstName.value,
