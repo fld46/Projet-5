@@ -79,7 +79,7 @@ function articleTitle(obj) {
 
 //creation de l'input quantité
 function articleQte(obj) {
-    //console.log(obj)
+
     const divSettings = document.createElement('div')
     divSettings.className = "cart__item__content__settings"
     const divQuantity = document.createElement('div')
@@ -113,7 +113,6 @@ function articleNumber() {
 
 //Creation du bouton delete
 function deleteArticle(obj) {
-
     const divDelete = document.createElement('div')
     divDelete.className = "cart__item__content__settings__delete"
     divDelete.addEventListener("click", () => deleteItem(obj.idc, obj))
@@ -127,7 +126,9 @@ function deleteArticle(obj) {
 //function update de quatité
 function updateQte(obj, qte) {
     if (qte == 0) {
-        deleteItem(obj.idc, obj)
+        if (confirm('Voulez vous vraiment supprimer cet objet ?')) {
+            deleteItem(obj.idc, obj)
+        }
     }
     else if (qte >= 0 && qte < 100) {
         obj.quantity = Number(qte)
@@ -165,14 +166,14 @@ function totalPrice(obj) {
 }
 
 //FORMULAIRE
-const orderButton = document.querySelector("#order")
-orderButton.addEventListener("click", (e) => submitForm(e))
-
+const erreurs = []
 verif('firstName', /^([a-zA-Z])*$/, 'Prenom non conforme')
 verif('lastName', /^([a-zA-Z])*$/, 'Nom non conforme')
 verif('address', /^([a-zA-Z 0-9])*$/, 'Adresse non conforme')
 verif('city', /^([a-zA-Z ])*$/, 'Ville non conforme')
 verif('email', /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Adresse e-mail non conforme')
+const orderButton = document.querySelector("#order")
+orderButton.addEventListener("click", (e) => submitForm(e))
 
 //comaraison d'une valeur d'un champ no avec un regex
 function verif(name, regex, msg = "erreur") {
@@ -182,14 +183,29 @@ function verif(name, regex, msg = "erreur") {
         const expreg = new RegExp(regex)
         if (expreg.test(nom.value)) {
             error.textContent = ""
-
+            createError(msg, 'delete')
         } else {
-            error.textContent = msg
 
+            error.textContent = msg
+            createError(msg)
         }
     })
 }
+//function de stockage d'erreur(s)
+function createError(msg, opt = 'add') {
+    if (opt == "add") {
+        if (erreurs.indexOf(msg) == -1) {
+            erreurs.push(msg)
+        }
+    } else {
+        erreurs.forEach(function (item) {
+            if (item == msg) {
+                erreurs.splice(erreurs.indexOf(item), 1);
+            }
+        })
 
+    }
+}
 
 //fonction d'envoi du formulaire
 function submitForm(e) {
@@ -198,8 +214,18 @@ function submitForm(e) {
         alert("Le panier doit contenir un article minimum")
         return
     }
+
     const form = document.querySelector(".cart__order__form")
     const body = makeRequestPost(form.elements)
+    console.log(form.elements)
+    if (erreurs.length > 0) {
+        alert("Formulaire mal rempli")
+        return
+    }
+    if (form.elements.firstName.value === "" || form.elements.lastName.value === "" || form.elements.address.value === "" || form.elements.city.value === "" || form.elements.email.value === "") {
+        alert('mal rempli')
+        return
+    }
     fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         body: JSON.stringify(body),
@@ -214,6 +240,7 @@ function submitForm(e) {
 
 //fonction pour creer l'objet body du POST
 function makeRequestPost(elements) {
+
     const body = {
         contact: {
             firstName: elements.firstName.value,
