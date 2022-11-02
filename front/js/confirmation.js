@@ -6,5 +6,5 @@ showOrder(orderId)
 function showOrder(orderId) {
     const span = document.querySelector("#orderId")
     span.textContent = orderId
-    //localStorage.clear()
+    localStorage.clear()
 }

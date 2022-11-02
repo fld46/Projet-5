@@ -171,7 +171,7 @@ verif('email', /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Adresse e-mail 
 const orderButton = document.querySelector("#order")
 orderButton.addEventListener("click", (e) => submitForm(e))
 
-//comaraison d'une valeur d'un champ no avec un regex
+//comparaison d'une valeur d'un champ no avec un regex
 function verif(name, regex, msg = "erreur") {
     const nom = document.getElementById(name)
     const error = document.querySelector('#' + name + 'ErrorMsg')
