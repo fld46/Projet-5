@@ -90,7 +90,7 @@ function articleQte(obj) {
     inputQte.type = "number"
     inputQte.className = "itemQuantity"
     inputQte.name = "itemQuantity"
-    inputQte.min = "0"
+    inputQte.min = "1"
     inputQte.max = "100"
     inputQte.value = obj.quantity
     inputQte.addEventListener("change", () => updateQte(obj, inputQte.value))
@@ -125,12 +125,7 @@ function deleteArticle(obj) {
 }
 //function update de quatité
 function updateQte(obj, qte) {
-    if (qte == 0) {
-        if (confirm('Voulez vous vraiment supprimer cet objet ?')) {
-            deleteItem(obj.idc, obj)
-        }
-    }
-    else if (qte >= 0 && qte < 100) {
+    if (qte > 0 && qte < 100) {
         obj.quantity = Number(qte)
         objPanier = {
             id: obj.id,
@@ -142,6 +137,7 @@ function updateQte(obj, qte) {
         totalPrice(obj)
     } else {
         alert('La quantité par article doit être comprise entre 1 et 100')
+        return
     }
 
 }
@@ -223,7 +219,7 @@ function submitForm(e) {
         return
     }
     if (form.elements.firstName.value === "" || form.elements.lastName.value === "" || form.elements.address.value === "" || form.elements.city.value === "" || form.elements.email.value === "") {
-        alert('mal rempli')
+        alert('Formulaire mal rempli')
         return
     }
     fetch("http://localhost:3000/api/products/order", {
