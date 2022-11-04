@@ -7,7 +7,6 @@ function addProducts(donnees) {
         const imageUrl = donnees[key].imageUrl
         const _id = donnees[key]._id
         const name = donnees[key].name
-        const price = donnees[key].price
         const description = donnees[key].description
         const altTxt = donnees[key].altTxt
         const anchor = makeLiens(_id)
@@ -19,6 +18,7 @@ function addProducts(donnees) {
         article.appendChild(titre)
         article.appendChild(texte)
     }
+
     // creation du liens html
     function makeLiens(id) {
         const anchor = document.createElement("a")

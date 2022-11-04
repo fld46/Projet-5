@@ -18,6 +18,7 @@ function infoProduct(donnees) {
     item.imageUrl = imageUrl
     item.altTxt = altTxt
     item.name = name
+    document.title = name
     createTitle(name)
     createPrice(price)
     createDescription(description)
@@ -88,6 +89,7 @@ function addCaddie() {
             alert(item.quantity + " " + item.name + " de couleur " + item.color + " ajouté(s) à ceux deja presents dans votre panier.")
         } else {
             alert("trop de canapés")
+            return
         }
         redirection()
     }

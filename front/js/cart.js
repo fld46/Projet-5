@@ -1,15 +1,17 @@
 //Recuperation des items sous la forme d'objet itemObj
-
-for (let i = 0; i < localStorage.length; i++) {
-    let item = localStorage.getItem(localStorage.key(i))
-    let itemObj = JSON.parse(item)
-    itemObj.idc = localStorage.key(i)
-    fetch('http://localhost:3000/api/products/' + itemObj.id)
-        .then((res) => res.json())
-        .then((data) => product(data, itemObj))
-
+function showPanier() {
+    document.getElementById("cart__items").innerText = ""
+    document.title = "Panier"
+    for (let i = 0; i < localStorage.length; i++) {
+        let item = localStorage.getItem(localStorage.key(i))
+        let itemObj = JSON.parse(item)
+        itemObj.idc = localStorage.key(i)
+        fetch('http://localhost:3000/api/products/' + itemObj.id)
+            .then((res) => res.json())
+            .then((data) => product(data, itemObj))
+    }
 }
-
+showPanier()
 //creation de l'objet obj avec toutes les infos de celui-ci et appel des fonctions pour le html
 function product(data, obj) {
     const { altTxt, imageUrl, name, price } = data
@@ -73,7 +75,6 @@ function articleTitle(obj) {
     divDescription.appendChild(color)
     divDescription.appendChild(price)
     div.appendChild(divDescription)
-
     return div
 }
 
@@ -137,6 +138,8 @@ function updateQte(obj, qte) {
         totalPrice(obj)
     } else {
         alert('La quantité par article doit être comprise entre 1 et 100')
+        //document.location.href = 'cart.html'
+        showPanier()
         return
     }
 
@@ -175,13 +178,16 @@ orderButton.addEventListener("click", (e) => submitForm(e))
 function verif(name, regex, msg = "erreur") {
     const nom = document.getElementById(name)
     const error = document.querySelector('#' + name + 'ErrorMsg')
+    if (nom.value == "") {
+        error.textContent = "Champ obligatoire"
+
+    }
     nom.addEventListener("input", function (event) {
         const expreg = new RegExp(regex)
-        if (expreg.test(nom.value)) {
+        if (expreg.test(nom.value) && nom.value != "") {
             error.textContent = ""
             createError(msg, 'delete')
         } else {
-
             error.textContent = msg
             createError(msg)
         }
