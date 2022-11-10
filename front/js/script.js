@@ -3,7 +3,7 @@ fetch('http://localhost:3000/api/products/')
     .then((data) => addProducts(data))
 //creation du contenu html a partir des produits du serveur
 function addProducts(donnees) {
-    //for (const key in donnees) {
+
     donnees.forEach(function (item) {
         const imageUrl = item.imageUrl
         const _id = item._id
